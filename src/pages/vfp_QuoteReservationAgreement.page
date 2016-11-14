@@ -1,0 +1,57 @@
+<apex:page standardController="Quote" extensions="ctrl_QuoteReservationAgreement" applyBodyTag="true" applyHtmlTag="true" docType="html-5.0" standardStylesheets="true"  >
+    <style>
+    #datePicker {
+        top: 20px!important;
+    }
+    </style>
+    
+    
+    
+    <apex:form id="form">
+        <apex:pageBlock id="EsRate" rendered="true">
+            <div class="pbSubsection">
+                <table class="detailList">
+                    <tbody>
+                        <tr>
+                            <td class="labelCol"><label>Reservation Agreement Number</label></td>
+                            <td class="dataCol col02"><apex:inputField value="{!q.Reservation_Agreement_Number__c}"/></td>
+                            <td class="labelCol"><label>Reservation Agreement Sent</label></td>
+                            <td class="dataCol"><apex:inputCheckbox value="{!q.Reservation_Agreement_Sent__c}"/></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol"><label>Reservation Deposit Amount</label></td>
+                            <td class="dataCol col02"><apex:inputField value="{!q.Reservation_Deposit_Amount__c}"/></td>
+                            <td class="labelCol"><label>Reservation Agreement Signed</label></td>
+                            <td class="dataCol"><apex:inputCheckbox value="{!q.Reservation_Agreement_Signed__c}"/></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol"><label>Anticipated Handover Date</label></td>
+                            <td class="dataCol col02"><apex:inputField styleclass="dateInput dateOnlyInput" type="text" value="{!q.Anticipated_Handover_Date__c}" /></td>
+                            <td class="labelCol"><label>Reservation Agreement Deposit Recieved</label></td>
+                            <td class="dataCol"><apex:inputCheckbox value="{!q.Reservation_Agreement_Deposit_Recieved__c}"/> </td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol"><label>Cheque Date</label></td>
+                            <td class="dataCol col02"><apex:inputField styleclass="dateInput dateOnlyInput" type="text" value="{!q.Cheque_Date__c}" /></td>
+                            <td class="labelCol"><label>Cheque Bank</label></td>
+                            <td class="dataCol"><apex:inputField value="{!q.Cheque_Bank__c}"/> </td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol"><label>Cheque Number</label></td>
+                            <td class="dataCol"><apex:inputField value="{!q.Cheque_Number__c}"/> </td>
+                            <td class="labelCol"><label></label></td>
+                            <td class="dataCol col02"></td>
+                            
+                        </tr>
+                    </tbody>
+                </table> 
+                <table>
+                    <tr>
+                        <td class="pbTitle">&nbsp;</td>
+                        <td><apex:commandButton value="Save" action="{!saveReservation}" oncomplete="window.top.location='/{!Quote.id}'; return true" /></td>
+                    </tr>
+                </table>            
+            </div>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

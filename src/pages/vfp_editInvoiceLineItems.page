@@ -1,0 +1,93 @@
+<apex:page Controller="cls_editInvoiceLineItems" docType="html-5.0" showChat="false" showHeader="true" standardStylesheets="false" > 
+    
+    <!--[if IE 7]> <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+    <!--[if IE 8]> <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+    <!--[if gt IE 8]><!-->
+    <!--[if IE 9]> <html class="no-js ie9 oldie" lang="en"> <![endif]-->
+    <html class="no-js" lang="en">
+        <!--<![endif]-->
+        <head>
+            <meta charset="utf-8" / >
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <apex:stylesheet value="{!URLFOR($Resource.WahaStylesResource, '/css/main-new.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.WahaStylesResource, '/css/responsive.css')}"/>
+
+            <script>
+            document.documentElement.className = document.documentElement.className.replace(/(\s|^)no-js(\s|$)/, 'js');         
+            </script>
+            
+            <!--[if lt IE 9]> 
+<script src="{!URLFOR($Resource.WahaPortalResource, '/WahaPortalResource/js/html5shiv.min.js')}"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+        </head>
+        <body style="background-color: white;">
+        <div class="insidepage">
+            <div class="container">
+                <div class="row">
+                    <apex:form id="myForm">
+                        <apex:pageMessages ></apex:pageMessages> 
+                        <br/>
+                        <br/>
+                        <div class="col-sm-12">
+                            <h4>Select Payments to be included in invoice</h4>
+                            <div class="bs-component">
+                                <br/>
+                            </div>
+                            
+                            <br/>
+                            <apex:pageBlock >
+                                <br/>                                  
+                                <apex:panelGroup >     
+                                    <table  class="table table-striped table-hover myrequests" align="center" style="margin:5px 0;align:center;width:100%;" >
+                                        <tbody>
+                                            <tr class="success">
+                                                <th>Payment Ref#</th> 
+                                                <th>Payment Name</th> 
+                                                <th>Amount</th>
+                                                <th>Due Date</th>
+                                                <th>Select</th> 
+                                            </tr>
+                                        </tbody>
+                                        <apex:repeat value="{!paymentList}" var="item"  > 
+                                            <tr>
+                                                <td> <font style="cursor:pointer;text-decoration: underline;" onclick="window.open('/{!item.uId}');"><apex:outputText value="{!item.Name}"/></font> </td> 
+                                                <td> <apex:outputText value="{!item.Payment_Name}" /> </td>
+                                                <td> 
+                                                    <apex:outputText value="{0, number, AED ###,###.00}"><apex:param value="{!item.Payment_Amount}" /></apex:outputText> 
+                                                </td>
+                                                <td> 
+                                                    <apex:outputText value="{0,date,dd/MM/yyyy}"><apex:param value="{!item.Due_Date}"/></apex:outputText> 
+                                                </td>
+                                                <td style="checkbox"><apex:inputCheckbox value="{!item.isSelected}"/></td>
+                                            </tr> 
+                                        </apex:repeat> 
+                                    </table>
+                                </apex:panelGroup> 
+                                <script language="Javascript">
+                                  function DisableAllButtons (actionText) {
+                                    var buttons = document.getElementsByClassName("btn");
+                                    for (var i = 0; i < buttons.length; i++) {
+                                        var button = buttons[i];
+                                        button.disabled = true;
+                                        button.classList.add("btnDisabled");
+                                        if ( actionText != null && actionText != "" ) button.value = actionText;
+                                    }
+                                  }
+                                  function SaveOnClick () {
+                                    try {
+                                        DisableAllButtons ("Saving...");
+                                    } catch(err) { }
+                                  }
+                                </script>
+                                <apex:commandButton styleClass="btn btn-success" action="{!Generate_Invoice}" onclick="SaveOnClick();" value="Save" reRender="myForm"/> 
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton styleClass="btn btn-success" action="{!Cancel}" value="Cancel"/>      
+                            </apex:pageBlock> 
+                        </div>        
+                    </apex:form>
+                </div>
+            </div>     </div>
+        </body>
+    </html>  
+</apex:page>

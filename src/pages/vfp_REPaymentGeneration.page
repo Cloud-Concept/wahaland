@@ -1,0 +1,219 @@
+<apex:page controller="ctrl_REPaymentGeneration" action="{!initPage}"  docType="html-5.0" showChat="false" showHeader="true" standardStylesheets="false"  >
+    <html class="no-js" lang="en">
+        <head>
+            <meta charset="utf-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+
+
+
+    <apex:stylesheet value="{!URLFOR($Resource.WahaStylesResource, '/css/main-new.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.WahaStylesResource, '/css/responsive.css')}"/>
+           <style>
+           .insidepage .custom-group .form-control,
+                     .insidepage .custom-group input{
+           font-size: 12px !important;
+    height: 35px !important;
+    padding: 2px 5px !important;
+    width: 170px;
+    margin: -10px 0 10px 0;
+           }
+           
+           .bPageBlock .custom-group .requiredInput .requiredBlock {
+           top: -10px!important;
+           bottom: 10px!important;
+           }
+           
+                     .custPopup h4 {
+                         display: block;
+                     }
+                     
+           </style> 
+        </head>
+        <body>  
+        <div class="insidepage">
+            <div class="container">
+                <div class="row">
+                    <apex:form id="myForm">
+                        <apex:pageMessages escape="false" rendered="true"></apex:pageMessages>
+                        <div class="col-lg-12">
+                            <apex:pageBlock rendered="{!inputs}" > 
+                                <div class="well bs-component" rendered="{!inputs}">
+                                    <br/>
+                                    <form class="form-horizontal">
+                                        <div class="form-group custom-group">
+                                            <h4>Proposal/TC Payment Generat</h4>
+                                            <apex:pageBlockSection columns="1">
+                                                <div class="form-group custom-group">
+                                                    <div class="col-lg-10">
+                                                        <apex:outputText styleclass="control-label" value="{0, number, AED ###,###.00}" label="Total Price"><apex:param value="{!amount}" /></apex:outputText>                                                   
+                                                        
+                                                        <apex:inputField type="date" style="width:171px; border-style:solid; border-color:rgb(220, 228, 236); border-radius:4px; Height:35px; padding-left:4px;"  label="Start Date" required="true" value="{!newQuote.ExpirationDate}" />                                                   
+                                                        <apex:input styleClass="form-control" label="Number of Years" value="{!selectedInstallmentsNo}" required="true"  />
+                                                        <apex:actionFunction reRender="myForm" action="{!clearPage}" name="clearPage" />  
+                                                        
+                                                        <apex:selectList styleClass="form-control" label="Payment Per Year"  value="{!selectedInstallmentFrq}" size="1" id="FrList" onchange="document.getElementById('{!$Component.selectedInstallmentFrq}').value = this.value"> 
+                                                            <apex:selectOptions value="{!installmentFrq}"></apex:selectOptions>
+                                                        </apex:selectList>
+                                                        
+                                                        <apex:input styleClass="form-control"  label="Reservation Amount" value="{!ReservationAmount}" required="true" />
+                                                        <apex:input styleClass="form-control"  label="Deposit Amount" value="{!DepositAmount}" required="true" />
+                                                        <apex:input styleClass="form-control" label="Service Charge %" value="{!nonRefund}" required="true" /> 
+                                                    </div>
+                                                </div>
+                                            </apex:pageBlockSection> 
+                                            <apex:pageBlockSection columns="4" >
+                                                <div class="form-group">
+                                                    <div >
+                                                        <apex:commandButton styleclass="btn btn-primary" value="Generate Payment" action="{!setEscalationRate}" />  
+                                                        <apex:commandButton styleclass="btn btn-warning" value="Cancel" action="{!Cancel}"/>
+                                                    
+                                                    </div>
+                                                </div>
+                                            </apex:pageBlockSection>
+                                            
+                                        </div>
+                                    </form>
+                                    
+                                </div> 
+                            </apex:pageBlock>
+                            
+                            <apex:pageBlock id="EsRate" rendered="{!RatesSet}">
+                                <br/>
+                                
+                                <apex:outputPanel id="tstpopup">
+                                    <apex:outputPanel styleClass="popupBackground" layout="block"/>
+                                    <apex:outputPanel styleClass="custPopup" layout="block">
+                                        <h4>Set Escalation Rate Per Year</h4>
+                                        <div class="col-sm-4" style="width:100%">
+                                            <div class="bs-component">
+                                                <apex:pageBlockTable styleclass="table table-striped table-hover " value="{!escalationList}" var="itemEsRate">    
+                                                    <apex:column headerClass="success" headervalue="Year"  > 
+                                                        <apex:outputText value="{!itemEsRate.Year}"/>              
+                                                    </apex:column>
+                                                    <apex:column headerClass="success" headervalue="Escalation Rate %" >     <apex:input style="width:100%; border-style:none; background:transparent" value="{!itemEsRate.rate}" id="percent" />     </apex:column>
+                                                </apex:pageBlockTable>
+                                                <br/>
+                                                <apex:commandButton styleclass="btn btn-success" value="Set Rates" action="{!generatePayment}"/>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <apex:commandButton styleclass="btn btn-warning" value="Cancel" action="{!HidePopup}"/>
+                                                
+                                                
+                                                <br/>
+                                                <br/>
+                                            </div>
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                            </apex:pageBlock>
+                            <br/>
+                            <apex:pageBlock id="reTable" rendered="{!tableData.size > 0 }" mode="inlineEdit" >      <!--   rendered="{!tableData.size != NULL }"  --> 
+                                <apex:actionFunction action="{!subApproval}" name="callSave" reRender="myForm" /> <!-- -->
+                                
+                                <div class="bs-component">
+                                    <br/>
+                                    <br/>
+                                    <label style="width:100%; font-family:Lato,Helvetica Neue,Helvetica,Arial,sans-serif; font-weight:400; font-size:19px; color:inherit">Payments</label>
+
+                                    <apex:pageBlockTable styleClass="table table-striped table-hover" value="{!tableData}" var="item"  >    
+                                        <apex:column headerClass="success" headervalue="Payment Number" > 
+                                            <apex:inputField styleClass="form-control input-sm" value="{!item.Payment_Name__c}" rendered="{!item.Payment_Name__c != 'Security Deposit' && item.Payment_Name__c !='Reservation Amount'}"/>  
+                                            <apex:OutputField styleClass="form-control input-sm" value="{!item.Payment_Name__c}" rendered="{!item.Payment_Name__c == 'Security Deposit' || item.Payment_Name__c == 'Reservation Amount'}"/>   
+                                        </apex:column>
+                                        <apex:column headerClass="success" headervalue="Percentage" >    
+                                            <apex:inputField rendered="{!(item.Payment_Name__c != 'Service Charge Fee') || (item.Payment_Name__c == 'Service Charge Fee'&& item.YearNumber__c != '1')}"  styleClass="form-control input-sm" value="{!item.Percentage__c}" id="percent" onchange="reclac_amount(this.id, '{!$Component.amount}', '{!$Component.OYAmount}')" />
+                                            <apex:outputField rendered="{!item.Payment_Name__c == 'Service Charge Fee' && item.YearNumber__c == '1'}" styleClass="form-control input-sm" value="{!item.Percentage__c}" id="spercent" />
+                                        </apex:column>
+                                        <apex:column headerClass="success" headervalue="Payment Amount" >
+                                            <apex:inputField rendered="{!(item.Payment_Name__c != 'Service Charge Fee') || (item.Payment_Name__c == 'Service Charge Fee'&& item.YearNumber__c != '1')}"  styleClass="form-control input-sm" value="{!item.Payment_Amount__c}" id="amount" onchange="reclac_Perc('{!$Component.percent}', this.id, '{!$Component.OYAmount}')" />
+                                            <apex:outputField rendered="{!item.Payment_Name__c == 'Service Charge Fee' && item.YearNumber__c == '1'}"  styleClass="form-control input-sm" value="{!item.Payment_Amount__c}" id="samount" />
+                                        </apex:column> 
+                                        <apex:column headerClass="success" headervalue="Due Date" > <apex:inputField Type="date" style="width:100%; border-style:solid; border-color:rgb(220, 228, 236); border-radius:4px; padding-left:4px;"  value="{!item.Due_Date__c}"  />       </apex:column> 
+                                        <apex:column headerClass="success" headervalue="Notes" > <apex:inputField styleClass="form-control input-sm" value="{!item.Description__c}" />       </apex:column> 
+                                        <apex:column style="width:0%; background-color:white;">
+                                            <apex:inputhidden id="OYAmount"  value="{!item.originalYearlyAmount__c}" />
+                                        </apex:column>
+                                    </apex:pageBlockTable><br/>
+                                    <apex:commandButton styleclass="btn btn-success" value="Save Payments" action="{!subApproval}"/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <apex:commandButton styleclass="btn btn-warning" value="Cancel" action="{!Cancel}"/>
+                                    
+                                    <br/>
+                                </div>
+                                <apex:actionFunction action="/{!QuoteId }" name="redirectToParent"/>
+                                <script>
+                                function reclac_amount(pct, amt, org_amt){
+                                    var prct = document.getElementById(pct);  
+                                    var amount = document.getElementById(amt); 
+                                    var orgTotalAmount = document.getElementById(org_amt); 
+                                    var orgTAmount = orgTotalAmount.value.replace(/,/g, "");
+                                    amount.value = parseFloat(((orgTAmount * prct.value) / 100)).toFixed(2);
+                                }
+                                
+                                function reclac_Perc(pct, amt, org_amt){
+                                    var prct = document.getElementById(pct);  
+                                    var amount = document.getElementById(amt); 
+                                    var orgTotalAmount = document.getElementById(org_amt);
+                                    var amt = amount.value.replace(/,/g, "");                                    
+                                    var orgTAmount = orgTotalAmount.value.replace(/,/g, "");
+                                    if(amount.value != 0){
+                                        prct.value = parseFloat((parseFloat(amt)/parseFloat(orgTAmount)) * 100.00).toFixed(2);
+                                    }
+                                    else{ 
+                                        prct.value = 0;
+                                    }
+                                }
+
+                                
+                                </script>
+                                
+                            </apex:pageBlock>
+                            <div>
+                                <br/>
+                                <br/>
+                            </div>
+                        </div>   
+                    </apex:form>
+                </div>
+            </div>
+            </div>
+        </body>
+    </html>
+    <style type="text/css">
+        .custPopup{
+        background-color: white;
+        border-width: 2px;
+        border-style: solid;
+        border-radius: 4px;
+        border-color: #dce4ec;
+        z-index: 9999;
+        left: 50%;
+        padding:10px;
+        position: absolute;
+        /* These are the 3 css properties you will need to change so the popup 
+        displays in the center of the screen. First set the width. Then set 
+        margin-left to negative half of what the width is. You can add 
+        the height property for a fixed size pop up if you want.*/
+        width: 500px;
+        margin-left: -250px;
+        top:100px;
+        }
+        .popupBackground{
+        background-color:black;
+        opacity: 0.20;
+        filter: alpha(opacity = 20);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 9998;
+        }
+        .dateFormat{
+   visibility:hidden;
+}
+
+        
+    </style>
+</apex:page>

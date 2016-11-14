@@ -1,0 +1,428 @@
+<apex:page controller="cls_CommunityTCDetails" action="{!prepareQuery}" showChat="false" showHeader="false" docType="html-5.0" standardStylesheets="false" applyBodyTag="false" applyHtmlTag="false" >
+    
+    
+    
+    <html class="no-js" lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <title>Waha</title>
+            
+            <link rel="stylesheet" media="all" href="{!URLFOR($Resource.WahaTemp02, 'WahaTemp02/css/base.css')}"/>
+            <link rel="stylesheet" media="all" href="{!URLFOR($Resource.WahaTemp02, 'WahaTemp02/css/main.css')}"/>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+            <style>
+                table, tr, th, td{
+                border-top: 1px solid #7d7e80 !important;
+                }
+            </style>
+        </head>
+        
+        <body class="inner">
+            <apex:form id="form">
+                <header id="main-header">
+                    
+                    <div class="row header-inner">
+                        
+                        <div class="logo">
+                            <a class="smoothscroll" href="#hero">Waha</a>
+                        </div>
+                        
+                        <nav id="nav-wrap">         
+                            
+                            <a class="mobile-btn" href="#nav-wrap" title="Show navigation">
+                                <span class='menu-text'>Show Menu</span>
+                                <span class="menu-icon"></span>
+                            </a>
+                            <a class="mobile-btn" href="#" title="Hide navigation">
+                                <span class='menu-text'>Hide Menu</span>
+                                <span class="menu-icon"></span>
+                            </a>         
+                            
+                            <ul id="nav" class="nav">
+                                
+                                <li><a class="smoothscroll" href="{!$Site.BaseUrl}">Home.</a></li>
+                                <!-- Logged in user -->
+                                <apex:outputPanel rendered="{! If($Profile.Name =='Waha Customer Community Plus User' ,true,false) }">
+                                   <li class="current"><a class="smoothscroll" href="{!$Site.BaseUrl}/apex/vfp_CommunityTC">Tenancy Contract.</a></li>
+                                    <li><a class="smoothscroll" href="{!$Site.BaseUrl}/apex/vfp_CommunityCases">Enquiries.</a></li>
+                                    <li><a class="smoothscroll" href="{!$Site.Prefix}/secur/logout.jsp"> Logout.</a></li>
+                                    <!--<li><apex:outputLink value="{!$Site.Prefix}/secur/logout.jsp" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">{!$Label.site.logout}</apex:outputLink></li>-->
+                                </apex:outputPanel>
+                            </ul> 
+                            
+                        </nav> <!-- /nav-wrap -->       
+                        
+                    </div> <!-- /header-inner -->
+                    
+                </header>
+                <script>
+                function showLoading(){
+                    $('#loader').fadeIn('fast');
+                }
+                function hideLoading(){
+                    $('#loader').fadeOut('fast');
+                    
+                }
+                goToParent();
+                function goToParent(){ 
+                    if ("{!refreshPage}" == "true"){ 
+                        window.setTimeout(function() { window.top.location='/Portal/apex/vfp_CommunityTCDetails?TenancyContractId={!recId}'; }, 200);
+                    }   
+                }
+                </script>  
+                <apex:panelGroup rendered="{! If($Profile.Name =='Waha Customer Community Plus User' ,true,false) }">
+                    <div class="inside-page">
+                        <section id="portfolio">
+                            <div class="row section-head">
+                                <div class="twelve columns">
+                                    <h1>Tenancy Contract</h1>
+                                    <h4 Style="padding-bottom: 20px;">Information</h4>
+                                    
+                                    <table class="table " width="100%">
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Tenancy Contract Number</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Tenancy Contract Number" value="{!TCObject.Tenancy_Contract_Number__c}"/></td>
+                                            <td Style = "text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Status</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Status" value="{!TCObject.Status__c}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Tenant</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Tenant" value="{!TCObject.account__r.name}"/></td>
+                                            <td Style="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Old Contract</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><font style="cursor:pointer;text-decoration: underline;" onclick="window.open('/Portal/apex/vfp_CommunityTCDetails?TenancyContractId={!TCObject.Renewed_Contract__c}', '_self');" target="_self"><apex:outputField label="Old Contract" value="{!TCObject.Renewed_Contract__r.Tenancy_Contract_Number__c}"/></font></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Development No</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Development No" value="{!TCObject.Development_No__c}"/></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Khalifa Fund</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Khalifa Fund" value="{!TCObject.KFund__c}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Agreement Status</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Agreement Status" value="{!TCObject.Agreement_Status__c}"/></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Contract Type</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Contract Type" value="{!TCObject.Contract_Type__c}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Approval Status</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Approval Status" value="{!TCObject.Approval_Status__c}"/></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Unit Release Date</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputText value="{0,date,dd/MM/yyyy}"> <apex:param value="{!TCObject.Unit_Release_Date__c}" /> </apex:outputText></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Break Clause</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Break Clause" value="{!TCObject.Break_Clause__c}"/></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Payments Cancellation Date</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputText value="{0,date,dd/MM/yyyy}"> <apex:param value="{!TCObject.Payments_Cancellation_Date__c}" /> </apex:outputText></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Description</label></td>
+                                            <td colspan="3" style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Description" value="{!TCObject.Description__c}"/></td>
+                                        </tr>
+                                    </table>
+                                    <h4 Style="padding-bottom: 20px;">Units Summary</h4>
+                                    <table class="table" width="100%">
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Total Plot Area</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Total Plot Area" value="{!TCObject.Total_Plot_Area__c}"/></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Total Service Area</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Total Service Area" value="{!TCObject.Total_Service_Area__c}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Plot Reference</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Plot Reference" value="{!TCObject.Plot_Reference__c}"/></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Total Un-serviced Area</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Total Un-serviced Area" value="{!TCObject.Total_Un_serviced_Area__c}"/></td>
+                                        </tr>
+                                    </table>
+                                    <h4 Style="padding-bottom: 20px;">Contract Details</h4>
+                                    <table class="table" width="100%">
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Contract Expiry Date</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputText value="{0,date,dd/MM/yyyy}"> <apex:param value="{!TCObject.Contract_Expiry_Date__c}" /> </apex:outputText></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Contract Duration (Year)</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Contract Duration (Year)" value="{!TCObject.Contract_Duration__c}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Term Commencement Date</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputText value="{0,date,dd/MM/yyyy}"> <apex:param value="{!TCObject.Term_Commencement_Date__c}" /> </apex:outputText></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Lease Commencement Date</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputText value="{0,date,dd/MM/yyyy}"> <apex:param value="{!TCObject.Lease_Commencement_Date__c}" /> </apex:outputText></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Contract End Date</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputText value="{0,date,dd/MM/yyyy}"> <apex:param value="{!TCObject.Contract_End_Date__c}" /> </apex:outputText></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Rent Free Period</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Rent Free Period" value="{!TCObject.Rent_Free_Period__c}"/></td>
+                                        </tr>
+                                    </table>
+                                    <h4 Style="padding-bottom: 20px;">Pricing Details</h4>
+                                    <table class="table " width="100%">
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Annual Rent Price</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Annual Rent Price" value="{!TCObject.Total_Rent_Price__c}"/></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Service Charges</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Service Charges" value="{!TCObject.Service_Charges_dev__c}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Security Deposit</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Security Deposit" value="{!TCObject.Security_Deposit__c}"/></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Basic Service Charge</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Basic Service Charge" value="{!TCObject.Basic_Service_Charge__c}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Total Price</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Total Price" value="{!TCObject.Total_Price__c}"/></td>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Reservation Amount</label></td>
+                                            <td style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Reservation Amount" value="{!TCObject.Reservation_Amount__c}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td Style ="text-align: right ;padding-top: 0; padding-bottom: 0;" width="25%"><label>Total Price with Escalation rate</label></td>
+                                            <td colspan="3" style ="text-align: left ;padding-top: 0; padding-bottom: 0;" width="25%"><apex:outputField label="Total Price with Escalation rate" value="{!TCObject.Total_Price_with_Escalation_rate__c}"/></td>
+                                        </tr>
+                                    </table>
+                                    <div id="loader">
+                                        <div id="loading-div">
+                                            <h1>Loading</h1>
+                                            <div class="line"></div>
+                                            <p>Please Wait While Page Loading........</p>
+                                            <div class="loading-img "></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <input class="form-control-text" type="file" id="filePicker" onchange="attachFileToParent(event);" style="visibility:hidden; display: none;"/> 
+                                    <div class="wrapper">
+                                        <div>
+                                            <div class="intro boldlabel">
+                                                <apex:panelGroup rendered="{!customerDocs.size>0 && isActive}">
+                                                <h4>Tenant Requested Documents</h4>
+                                                    <script>
+                                                    var fileError = 0 ;
+                                                    function setAttachmentData(objId){ 
+                                                        document.getElementById("{!$Component.fileParentId}").value = objId ;
+                                                        $('#filePicker').click();
+                                                    }
+                                                    function attachFileToParent(evt){
+                                                        showLoading();
+                                                        var file = evt.target.files[0];
+                                                        fileError = 0 ;
+                                                        if(file.type.match('image.*') != null || file.type.match('application/pdf')){ // file.type.match('image.*') != null || file.type.match('application/pdf') != null
+                                                            if(file.size <= 10485760){
+                                                                addAttachmentFile(file);
+                                                            }else{        
+                                                                fileError = 1 ; 
+                                                                hideLoading();        
+                                                                alert("File Size Shouldn't exceed 10 MB");                                
+                                                            }
+                                                            
+                                                        }else{            
+                                                            fileError = 1 ;
+                                                            hideLoading();  
+                                                            alert("File type should be of type Image (JPG , JPEG , PNG , PDF , etc)") ; 
+                                                        }
+                                                    }
+                                                    
+                                                    function addAttachmentFile(fileData , callback) {  
+                                                        var reader = new FileReader();
+                                                        reader.readAsBinaryString(fileData);                                 
+                                                        var multipartRequestBody ;
+                                                        reader.onload = function(e) {
+                                                            var base64Data = btoa(reader.result);
+                                                            document.getElementById("{!$Component.fileBody}").value = base64Data;
+                                                            document.getElementById("{!$Component.fileName}").value = fileData.name ; 
+                                                            saveAttachment();                                                                              
+                                                        } 
+                                                        reader.error = function(e) {
+                                                            hideLoading();   
+                                                            alert("Error Happened While Loading the file.") ;                              
+                                                        } 
+                                                        reader.onloadend = function(e) {
+                                                        }
+                                                    }
+                                                    function saveAttachment(){
+                                                        console.log('Into Saving File');         
+                                                        if(document.getElementById("{!$Component.fileName}").value != ''){
+                                                            console.log('Saving File');    
+                                                            if(fileError == 0){
+                                                                //parent.showLoading(); 
+                                                                attachNewDoc();                                      
+                                                            } 
+                                                        }else{
+                                                            document.getElementById('selectedFileDetails').innerHTML = "You must choose a file first." ; 
+                                                            fileError = 1 ;                             
+                                                        }  
+                                                    }
+                                                    function confirmDeletion(objId){
+                                                        var result = confirm("Are you sure?");
+                                                        if(result){
+                                                            $('#loader').fadeIn();
+                                                            document.getElementById('{!$Component.attachmentId}').value = objId ;
+                                                            deleteAttachment();                    
+                                                        }                                   
+                                                    }
+                                                    </script>  
+                                                    
+                                                    <apex:inputHidden value="{!parentId}" id="fileParentId"/>
+                                                    <apex:inputHidden value="{!fileName}" id="fileName"/>
+                                                    <apex:inputHidden value="{!fileBody}" id="fileBody"/>
+                                                    <apex:actionFunction action="{!useNewFile}" name="attachNewDoc" reRender="form" oncomplete="hideLoading();"/>
+                                                    
+                                                    <table class="table table-striped table-bordered" width="100%">
+                                                        <tr>
+                                                            <th width="40%">Document Name</th>
+                                                            <th width="15%">Upload/Preview</th>
+                                                            <th width="10%">Submit</th>
+                                                        </tr>
+                                                        <apex:repeat value="{!customerDocs}" var="item">
+                                                            <tr>
+                                                                <td>{!item.Name}</td>
+                                                                <td>    
+                                                                    <div class="tryout">
+                                                                    <apex:panelGroup rendered="{!!item.Uploaded__c}">
+                                                                        <i class="fa fa-cloud-upload" style="color: #61c027;font-size:24px;"  onclick="setAttachmentData('{!item.id}')"></i>
+                                                                    </apex:panelGroup>
+                                                                    <apex:panelGroup rendered="{!item.Uploaded__c}">
+                                                                        <i class="fa fa-eye" style="color: #61c027;font-size:24px;" onclick="window.open('{!if(item.Attachment_Id__c == null , null , URLFOR($Action.Attachment.Download, item.Attachment_Id__c))}')"></i>
+                                                                    </apex:panelGroup>
+                                                                    <apex:panelGroup rendered="{!item.Submitted__c == false && item.Uploaded__c == true}"> 
+                                                                        <apex:commandLink action="{!deleteAttachmentFile}" style="font-size: 24px;color: #61c027;" onclick=" $('#loader').fadeIn();" oncomplete="$('#loader').fadeOut();" reRender="form"> 
+                                                                            <apex:param assignTo="{!attachmentId}" name="attachmentId" id="attachmentId" value="{!item.Attachment_Id__c}"/> 
+                                                                            <i class="fa fa-trash" style=" color: #61c027;font-size: 24px;margin-left: 2px; margin-top: 7px;"></i>
+                                                                        </apex:commandLink> 
+                                                                    </apex:panelGroup>
+                                                                    </div>
+                                                                </td>
+                                                                <td style="text-align:center">
+                                                                    <apex:commandButton action="{!submitDoc}" value="Submit" rendered="{!!item.Submitted__c && item.Attachment_Id__c != null}" reRender="form"> 
+                                                                        <apex:param assignTo="{!docId}" name="docId" id="docId" value="{!item.Id}"/>
+                                                                    </apex:commandButton>
+                                                                    <apex:inputCheckbox value="{!item.Submitted__c}" disabled="true" rendered="{!item.Submitted__c}"/>
+                                                                </td>
+                                                            </tr>
+                                                        </apex:repeat>
+                                                    </table>
+                                                    <apex:panelGroup id="test"></apex:panelGroup>
+                                                    <!--<apex:actionFunction action="{!deleteAttachmentFile}" name="deleteAttachment" oncomplete="$('#loader').fadeOut();" reRender="myForm"/>
+    <apex:inputHidden value="{!attachmentId}" id="attachmentId" />-->
+                                                    
+                                                </apex:panelGroup>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js"  />
+                                    <h4>Contract Units</h4>
+                                    <table class="table table-striped table-bordered" width="100%">
+                                        <tbody>
+                                            <tr class="success">
+                                                <th width="20%" style="text-align:center;line-height: 17px;">Unit Name</th> 
+                                                <th width="30%" style="text-align:center;line-height: 17px;">Sales Price</th> 
+                                                <th width="30%" style="text-align:center;line-height: 17px;">Area in sq. m.</th>
+                                                <th width="20%" style="text-align:center;line-height: 17px;">Annual Rent</th>
+                                            </tr>
+                                        </tbody>
+                                        <apex:repeat value="{!cliList}" var="item"  > 
+                                            <tr>
+                                                <td style="text-align:center;line-height: 15px;"> <apex:outputField value="{!item.Unit_Name__c}" /> </td>
+                                                <td style="text-align:center;line-height: 15px;"> <apex:outputField value="{!item.UnitPrice__c}" /> </td>
+                                                <td style="text-align:center;line-height: 15px;"> <apex:outputField value="{!item.Quantity__c}" /> </td>
+                                                <td style="text-align:center;line-height: 15px;"> <apex:outputField value="{!item.Annual_Rent__c}" /> </td>
+                                            </tr> 
+                                        </apex:repeat> 
+                                    </table>
+                                    <apex:panelGroup rendered="{!invoices.Size>0}">
+                                    <table class="table table-striped table-bordered" width="100%" >
+                                        <h4>Invoices</h4>
+                                        <tbody>
+                                            <tr class="success">
+                                                <th width="20%" style="text-align:center;line-height: 17px;">Invoice Number</th> 
+                                                <th width="30%" style="text-align:center;line-height: 17px;">Amount</th> 
+                                                <th width="15%" style="text-align:center;line-height: 17px;">Due Date</th>
+                                                <th style="text-align:center;line-height: 17px;">Paid</th>
+                                                <th width="35%" style="text-align:center;line-height: 17px;">Description</th>
+                                                <th width="35%" style="text-align:center;line-height: 17px;">Download</th>
+                                            </tr>
+                                        </tbody>
+                                        <apex:repeat value="{!invoicesWzAttachments}" var="item"  > 
+                                            <tr>
+                                                <td style="text-align:center;line-height: 15px;"> <apex:outputText value="{!item.invName}" /> </td>
+                                                <td style="text-align:center;line-height: 15px;">AED &nbsp;<apex:outputText value="{!item.Amount}" /> </td>
+                                                <td style="text-align:center;line-height: 15px;"> <apex:outputText value="{0,date,dd/MM/yyyy}"> <apex:param value="{!item.Due_Date}" /> </apex:outputText></td>
+                                                <td style="text-align:center;line-height: 15px;"> <apex:inputCheckbox disabled="true" value="{!item.Amount_Paid}" /> </td>
+                                                <td style="text-align:center;line-height: 15px;"> <apex:outputText value="{!item.Description}" /> </td>
+                                                <td>    
+                                                    <div class="tryout">
+                                                        <apex:panelGroup rendered="{!item.attachId != null}">
+                                                            <a target="_self" href="/Portal/servlet/servlet.FileDownload?file={!item.attachId}" download="{!item.attachName}"> <i class="fa fa-eye" style="color: #61c027;font-size:24px;" ></i> </a>
+                                                        </apex:panelGroup>
+                                                    </div>
+                                                </td>
+                                            </tr> 
+                                        </apex:repeat> 
+                                    </table>
+                                </apex:panelGroup>
+                                    <apex:panelGroup rendered="{!attachments.Size>0}">
+                                        <h4>Download Contract</h4>
+                                    <table class="table table-striped table-bordered" width="100%">
+                                                        <tr>
+                                                            <th width="40%">Attachment Name</th>
+                                                            <th width="15%">Download</th>
+                                                        </tr>
+                                                        <apex:repeat value="{!attachments}" var="item">
+                                                            <tr>
+                                                                <td>{!item.Name}</td>
+                                                                <td>    
+                                                                    <div class="tryout">
+                                                                    <apex:panelGroup >
+                                                                        <a target="_self" href="/Portal/servlet/servlet.FileDownload?file={!item.Id}" download="{!item.Name}"> <i class="fa fa-eye" style="color: #61c027;font-size:24px;" ></i> </a>
+                                                                    </apex:panelGroup>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </apex:repeat>
+                                                    </table>
+                                        </apex:panelGroup>
+                                    </div>
+                            </div>
+                        </section>
+                    </div>
+                </apex:panelGroup>
+                
+                <footer>
+                    
+                    <div class="row">       
+                        
+                        <div class="six columns tab-whole footer-about">
+                            <p class="copyright">&copy; Copyright 2016 Waha. Developed by <a href="http://cloudconceptgroup.com/" target="_blank" >Cloud Concerpt.</a></p>  
+                            
+                        </div> <!-- /footer-about -->
+                        
+                        <div class="three columns tab-whole right-cols">
+                            
+                            <div class="row">
+                                
+                                <h3 class="contact">Follow Us</h3>
+                                
+                            <ul class="footer-list">
+                     <li><a href="https://www.linkedin.com/company/waha-capital?trk=top_nav_home" target="_blank">Linkedin</a></li>
+                     <li><a href="https://twitter.com/WahaCapital"  target="_blank">Twitter</a></li>
+                  </ul>         
+                                
+                                
+                            </div> <!-- /Row(nested) -->
+                            
+                        </div>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div> <!-- /row -->
+                    
+                </footer>
+                
+            </apex:form>
+        </body>
+        
+    </html>
+</apex:page>

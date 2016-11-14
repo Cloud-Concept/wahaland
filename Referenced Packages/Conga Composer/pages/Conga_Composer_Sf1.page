@@ -1,0 +1,16 @@
+<apex:page showHeader="false" sidebar="false">
+    <!-- Custom Loading splash screen -->
+    <apex:includeScript value="https://composersf1.congamerge.com/apxtlibraryjs/apxt-bootstrapper.js"/>
+    <apex:includeScript value="https://composersf1.congamerge.com/composersf1/resources/javascript/composerSf1-vf.js"/>
+    <!-- Canvas Object -->
+    <apex:canvasApp namespacePrefix="APXTConga4" 
+    developerName="Conga_Composer_SF1"
+    id="Composer_SF1"
+    height="100%"
+    width="100%"
+    border="0" 
+    scrolling="no"
+    onCanvasAppError="err"
+    onCanvasAppLoad="done"
+    parameters="{id:'{!$CurrentPage.parameters.id}'}" />
+</apex:page>
